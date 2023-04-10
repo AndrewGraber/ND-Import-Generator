@@ -17,6 +17,9 @@ class ServerNetcode {
             socket.on("save_new", (data) => {
                 //TODO Saving code
             });
+            socket.on("get_file_node", (filepath) => {
+                this.send_file_node(filepath, socket);
+            });
         });
     }
     send_client_data(socket) {
@@ -28,6 +31,11 @@ class ServerNetcode {
         var folderData = this.dataManager.getFolderData();
         socket.emit("folder_data", folderData);
         console.log("Sent folder data!");
+    }
+    send_file_node(filepath, socket) {
+        var fileData = this.dataManager.getFileNode(filepath);
+        socket.emit("file_node", fileData);
+        console.log("Sent file node for '" + filepath + "'");
     }
 }
 exports.ServerNetcode = ServerNetcode;

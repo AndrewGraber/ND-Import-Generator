@@ -29,12 +29,44 @@ const path = __importStar(require("path"));
 const sync_1 = require("csv-parse/sync");
 class DataManager {
     constructor() {
-        this.folderToRead = "C:/Users/NetworkOverflow/Desktop/";
+        this.folderToRead = "Z:/company/WP51/Data/_Andrew/";
         this.clientData = {};
         this.loadClientData();
     }
     getClientData() {
         return this.clientData;
+    }
+    getFileNode(filePathIn) {
+        var output = [];
+        fs.readdir(filePathIn, (err, files) => {
+            if (err) {
+                console.error(err);
+                return [];
+            }
+            else {
+                for (var file of files) {
+                    var curPath = path.join(filePathIn, file);
+                    var fileData = {
+                        id: curPath,
+                        text: file,
+                        state: {
+                            opened: false,
+                            disabled: false,
+                            selected: false
+                        }
+                    };
+                    var isDirectory = fs.statSync(curPath).isDirectory();
+                    if (isDirectory) {
+                        fileData.icon = 'jstree-folder';
+                    }
+                    else {
+                        fileData.icon = 'jstree-file';
+                    }
+                    output.push(fileData);
+                }
+                return output;
+            }
+        });
     }
     static readFolderContents(dir) {
         var output = [];
@@ -90,6 +122,22 @@ class DataManager {
             }
         }
         console.log("Client Data Loaded!");
+    }
+    saveImportData(data_in) {
+        var outputHeaders = [
+            "filepath",
+            "Client",
+            "Matter",
+            "Author",
+            "Doc Type",
+            "DOCUMENT NAME",
+            "DOCUMENT EXTENSION",
+            "ACCESS",
+            "CREATED BY",
+            "CREATED DATE",
+            "LAST MODIFIED BY",
+            "LAST MODIFIED DATE"
+        ];
     }
 }
 exports.DataManager = DataManager;

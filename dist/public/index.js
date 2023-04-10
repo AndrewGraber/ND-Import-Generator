@@ -1,5 +1,7 @@
 var clientData = {};
 
+var outputData = [];
+
 function fillClientOptions() {
     var output = "";
     for(var client in clientData) {
@@ -27,6 +29,37 @@ function fillMatterOptions() {
     });
 }
 
+function buildLinesForNode(nodeId, isTopLevel) {
+    var output = [];
+    var node = $.jstree.reference('#filetree').select_node(nodeId);
+    var selClientId = $('#client-select :selected').val();
+    var selMatterId = $('#matter-select :selected').val();
+
+    var isRecursive = $("#recursive").attr('checked');
+
+    var isFolder = node.icon == 'jstree-folder';
+
+    if(isFolder) {
+        if(is)
+    } else {
+        var lastSlash = nodeId.lastIndexOf('/');
+        if(lastSlash == -1) lastSlash = nodeId.lastIndexOf('\\');
+        var shortPath = nodeId.slice(lastSlash + 1);
+
+        var dotLocation = shortPath.lastIndexOf('.');
+        var documentName = nodeId.slice()
+    }
+
+    var selDocType = $('#doctype-select :selected').val();
+
+    var lineData = [
+        nodeId,           //filepath
+        selClientId,    //Client ID
+        selMatterId,    //Matter ID
+
+    ];
+}
+
 $(function() {
     const socket = io();
 
@@ -49,5 +82,14 @@ $(function() {
         $('#filetree').on('changed.jstree', (e, data) => {
             console.log(data.selected);
         });
+    });
+
+    $("#apply-settings").on('click', function(event) {
+        var selectedItems = $("#filetree").jstree("get_selected");
+        console.log(selected);
+
+        for(var item of selectedItems) {
+            
+        }
     });
 });

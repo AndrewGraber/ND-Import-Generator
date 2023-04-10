@@ -54,7 +54,7 @@ div.content {
     flex-direction: row;
 
     div.left-bar {
-        max-height: 90vh;
+        height: 90vh;
         overflow-y: scroll;
         flex: 0.4;
 
@@ -80,7 +80,7 @@ div.content {
 
                 span.input-label {
                     display: inline-block;
-                    width: 7vw;
+                    width: 10vw;
                 }
 
                 select {

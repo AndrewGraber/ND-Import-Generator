@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
+import moment from 'moment';
 
 type RawMatterData = {
     MatterNumber: number;
@@ -27,13 +28,16 @@ type FileData = {
         opened: boolean;
         disabled: boolean;
         selected: boolean;
-    },
-    children?: Array<FileData>
+    };
+    children?: Array<FileData>;
+    author?: string;
+    created_date?: string;
+    modified_date?: string;
 }
 
 export class DataManager {
     private clientData: ClientMap;
-    private folderToRead: string = "C:/Users/NetworkOverflow/Desktop/";
+    private folderToRead: string = "Z:/company/WP51/Data/_Andrew/";
 
     constructor() {
         this.clientData = {};
@@ -43,6 +47,44 @@ export class DataManager {
 
     getClientData() {
         return this.clientData;
+    }
+
+    getFileNode(filePathIn: string) {
+        var output: Array<FileData> = [];
+        fs.readdir(filePathIn, (err: any, files: any) => {
+            if(err) {
+                console.error(err);
+                return [];
+            } else {
+                for(var file of files) {
+                    var curPath = path.join(filePathIn, file);
+                    var fileData: FileData = {
+                        id: curPath,
+                        text: file,
+                        state: {
+                            opened: false,
+                            disabled: false,
+                            selected: false
+                        }
+                    };
+
+                    var fileStats = fs.statSync(curPath);
+                    if(fileStats.isDirectory()) {
+                        fileData.icon = 'jstree-folder';
+                    } else {
+                        fileData.icon = 'jstree-file';
+                    }
+
+                    fileData.author = "Cynthia P Helfrich";
+                    fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
+                    fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
+
+                    output.push(fileData);
+                }
+
+                return output;
+            }
+        });
     }
 
     static readFolderContents(dir: string): FileData[] {
@@ -106,5 +148,21 @@ export class DataManager {
         }
 
         console.log("Client Data Loaded!");
+    }
+
+    saveImportData(data_in: Array<Array<any>>) {
+        var outputHeaders = [
+            "filepath",
+            "Client",
+            "Matter",
+            "Author",
+            "Doc Type",
+            "DOCUMENT NAME",
+            "DOCUMENT EXTENSION",
+            "CREATED BY",
+            "CREATED DATE",
+            "LAST MODIFIED BY",
+            "LAST MODIFIED DATE"
+        ];
     }
 }

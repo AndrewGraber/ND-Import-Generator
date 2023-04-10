@@ -38,7 +38,7 @@ div.content {
   display: flex;
   flex-direction: row; }
   div.content div.left-bar {
-    max-height: 90vh;
+    height: 90vh;
     overflow-y: scroll;
     flex: 0.4; }
     div.content div.left-bar div#filetree {
@@ -57,7 +57,7 @@ div.content {
         margin-bottom: 0.5em; }
         div.content div.right-bar div.section p span.input-label {
           display: inline-block;
-          width: 7vw; }
+          width: 10vw; }
         div.content div.right-bar div.section p select {
           min-width: 30vw; }
         div.content div.right-bar div.section p button {

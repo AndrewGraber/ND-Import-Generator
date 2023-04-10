@@ -4,9 +4,11 @@ import { DataManager } from './data_manager';
 interface ServerToClientEvents {
     client_data: (data: object) => void;
     folder_data: (data: object) => void;
+    file_node: (data: object) => void;
 }
 
 interface ClientToServerEvents {
+    get_file_node: (filepath: any) => void;
     save_new: (data: Array<Array<any>>) => void;
 }
 
@@ -39,6 +41,10 @@ export class ServerNetcode {
             socket.on("save_new", (data) => {
                 //TODO Saving code
             });
+
+            socket.on("get_file_node", (filepath) => {
+                this.send_file_node(filepath, socket);
+            });
         });
     }
 
@@ -52,5 +58,11 @@ export class ServerNetcode {
         var folderData = this.dataManager.getFolderData();
         socket.emit("folder_data", folderData);
         console.log("Sent folder data!");
+    }
+
+    send_file_node(filepath: string, socket: any) {
+        var fileData = this.dataManager.getFileNode(filepath);
+        socket.emit("file_node", fileData);
+        console.log("Sent file node for '" + filepath + "'");
     }
 }
