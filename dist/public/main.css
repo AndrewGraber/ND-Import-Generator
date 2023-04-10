@@ -20,7 +20,7 @@ div.cont-outer {
 div.info, div.content {
   padding: 3vh 3vw;
   border-radius: 1.5em;
-  max-width: 90vw;
+  width: 90vw;
   display: flex;
   flex-direction: column;
   align-items: center; }
@@ -34,13 +34,42 @@ div.info {
     margin-bottom: 0.5em; }
 
 div.content {
-  background-color: #413e4e; }
-  div.content div.section {
-    width: 90%;
-    margin-left: 5%; }
-    div.content div.section p {
-      text-indent: unset;
-      margin-bottom: 0.5em; }
+  background-color: #413e4e;
+  display: flex;
+  flex-direction: row; }
+  div.content div.left-bar {
+    max-height: 90vh;
+    overflow-y: scroll;
+    flex: 0.4; }
+    div.content div.left-bar div#filetree {
+      width: 100%;
+      min-height: 50vh;
+      background-color: #322f3f; }
+  div.content div.right-bar {
+    flex: 0.6;
+    margin-left: 3vw; }
+    div.content div.right-bar div.section {
+      width: 90%;
+      margin-left: 5%;
+      margin-bottom: 2em; }
+      div.content div.right-bar div.section p {
+        text-indent: unset;
+        margin-bottom: 0.5em; }
+        div.content div.right-bar div.section p span.input-label {
+          display: inline-block;
+          width: 7vw; }
+        div.content div.right-bar div.section p select {
+          min-width: 30vw; }
+        div.content div.right-bar div.section p button {
+          font-size: 1em;
+          padding: 0.5em;
+          border-radius: 0.25em;
+          background-color: #322f3f;
+          color: #d4d4d4;
+          border: 1px solid #322f3f;
+          transition: background-color 0.25s linear; }
+          div.content div.right-bar div.section p button :hover {
+            background-color: #250f83; }
 
 div.separator {
   width: 90%;

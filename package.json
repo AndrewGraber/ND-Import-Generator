@@ -2,6 +2,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/jquery": "^3.5.16",
+    "@types/jstree": "^3.3.41",
     "@types/node": "^18.15.11",
     "@types/socket.io": "^3.0.2",
     "concurrently": "^8.0.1",
@@ -23,6 +24,7 @@
   "author": "AndrewGraber",
   "license": "MIT",
   "dependencies": {
+    "csv": "^6.2.8",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "node-random-name": "^1.0.1",

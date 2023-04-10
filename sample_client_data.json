@@ -1,0 +1,21 @@
+{
+    "[ContactNumber]": {
+        "name": "[ContactName]",
+        "matters": {
+            "[MatterNumber]": "[MatterName]"
+        }
+    },
+    "1234": {
+        "name": "Doe, John",
+        "matters": {
+            "4867": "Doe, John - Litigation"
+        }
+    },
+    "4321": {
+        "name": "Neutron, Jimmy",
+        "matters": {
+            "5819": "Neutron, Jimmy - LLC Formation",
+            "7118": "Neutron Family - Custody Matters"
+        }
+    }
+}

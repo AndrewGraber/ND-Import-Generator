@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="select2/css/select2.min.css" />
     <link rel="stylesheet" href="jsTree/themes/default/style.min.css" />
     <link rel="stylesheet" href="main.css">
     <title>ND Import File Generator</title>
@@ -19,14 +20,64 @@
         </div>
         <div class="content">
             <div class="left-bar">
-                Left side
+                <div id="filetree"></div>
             </div>
             <div class="right-bar">
-                Right side
+                <div class="section">
+                    <p><span id="num-selected">0</span> items selected.</p>
+                </div>
+                <div class="section">
+                    <p>
+                        <span class='input-label'>Client: </span><select id="client-select"></select>
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <span class='input-label'>Matter: </span><select id="matter-select"></select>
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <span class='input-label'>Doc Type: </span><select id="doctype-select">
+                            <option value="">No Doc Type</option>
+                            <option value="CORRES">Correspondence</option>
+                            <option value="DISC">Discovery</option>
+                            <option value="DRAFT">Drafted Documents</option>
+                            <option value="Email">Emails</option>
+                            <option value="EXECUTED">Executed Documents</option>
+                            <option value="NOTES">Retainer and Notes</option>
+                            <option value="PLEADING">Pleadings</option>
+                            <option value="SOURCE DOCS">Source Documents</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <input type="checkbox" id="recursive"> Apply settings to folders recursively
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <button id="apply-settings">Apply Settings to Selected Files</button>
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <span id="num-files">0</span> Total Files in this Import.
+                    </p>
+                </div>
+                <div class="section">
+                    <p>
+                        <button id="save-file">Save Import File</button>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" src="select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="jsTree/jstree.min.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

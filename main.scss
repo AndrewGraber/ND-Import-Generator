@@ -1,6 +1,7 @@
 $bg-color: #2b2b2b;
 $bg-color-title: #322f3f;
 $bg-color-content: #413e4e;
+$bright-color: #250f83;
 $font-color: #d4d4d4;
 $separator-color: #afafaf;
 
@@ -30,7 +31,7 @@ div.cont-outer {
 div.info, div.content {
     padding: 3vh 3vw;
     border-radius: 1.5em;
-    max-width: 90vw;
+    width: 90vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,19 +54,52 @@ div.content {
     flex-direction: row;
 
     div.left-bar {
-        flex: 0.25;
+        max-height: 90vh;
+        overflow-y: scroll;
+        flex: 0.4;
+
+        div#filetree {
+            width: 100%;
+            min-height: 50vh;
+            background-color: $bg-color-title;
+        }
     }
 
     div.right-bar {
-        flex: 0.75;
+        flex: 0.6;
+        margin-left: 3vw;
 
         div.section {
             width: 90%;
             margin-left: 5%;
+            margin-bottom: 2em;
     
             p {
                 text-indent: unset;
                 margin-bottom: 0.5em;
+
+                span.input-label {
+                    display: inline-block;
+                    width: 7vw;
+                }
+
+                select {
+                    min-width: 30vw;
+                }
+
+                button {
+                    font-size: 1em;
+                    padding: 0.5em;
+                    border-radius: 0.25em;
+                    background-color: $bg-color-title;
+                    color: $font-color;
+                    border: 1px solid $bg-color-title;
+                    transition: background-color 0.25s linear;
+
+                    :hover {
+                        background-color: $bright-color;
+                    }
+                }
             }
         }
     }
