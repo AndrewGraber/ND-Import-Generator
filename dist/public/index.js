@@ -126,7 +126,6 @@ async function getFileNodeChildren(currentNode, callback) {
     var me = this;
     //Get node from socket
     socket.emit('get_file_node', currentNode.id, (response) => {
-        console.log(response);
         callback.call(me, response.nodes);
     });
 }

@@ -18,33 +18,6 @@
                 This tool is meant to help with the generation of the CSV file required by the ND Mass Import Tool. It interfaces with the Matters_With_Contacts.csv
                 and the Data/ directory to make assigning profile data to documents quicker.
             </p>
-            <p>
-                On the left side of the page, you will see a representation of the files in the Data/ directory. Here, you can select folders and/or files to add to this
-                import. If you select a file and hold Shift, you can click another entry at a further point in the list to select several files. You can also hold 'CTRL'
-                to select multiple files one-by-one. They can be kind of small and hard to see, but folders have an arrow to the left of them you can use to expand and
-                hide their contents. Currently, you will need to expand a folder if you plan on selecting it to apply profile data to the files inside.
-            </p>
-            <p>
-                <b>NOTE:</b> Because the Data/ directory is very large, it is not feasible to load everything every time you load the page. As a result of this issue, this app loads
-                files dynamically, which means it doesnt know about a directory's contents until you've expanded it once.
-            </p>
-            <p>
-                At the top of the right side, you can see how many items you have selected (this does not include folder contents, though it probably should //TODO). Below
-                that, you can set the profile data for the documents you have selected (Client, Matter, Doc Type). If you enable 'Apply settings to folders recursively',
-                all subfolders of the folder(s) you have selected will also be scanned for files when the 'Apply' button is pressed (currently, you must expand any and all
-                subfolders manually if you want them to be included - see above).
-            </p>
-            <p>
-                Once you have made your selections, press 'Apply Settings to Selected Files'. If you have selected at least one file, you should see the number in the section
-                below change, indicating the CSV contents were generated. If you would like to include any other files in this import, repeat the process (do not refresh the page
-                - nothing has been saved yet!)
-            </p>
-            <p>
-                When you have applied the profile data and generated the CSV contents for all of the files for your import, you will want to make sure they are actually saved
-                to a file somewhere. The final section on the right includes an area where you can set the title of this file (it can be whatever you want). Click the 'Save 
-                Import File' button and your file will be generated. Currently, the output files are in the root directory of this tool, but I may make it give a 'Save As'
-                prompt in the future (//TODO).
-            </p>
         </div>
         <div class="content">
             <div class="left-bar">
@@ -113,6 +86,35 @@
                     </p>
                 </div>
             </div>
+        </div>
+        <div class="info">
+            <p>
+                On the left side of the page, you will see a representation of the files in the Data/ directory. Here, you can select folders and/or files to add to this
+                import. If you select a file and hold Shift, you can click another entry at a further point in the list to select several files. You can also hold 'CTRL'
+                to select multiple files one-by-one. They can be kind of small and hard to see, but folders have an arrow to the left of them you can use to expand and
+                hide their contents. Currently, you will need to expand a folder if you plan on selecting it to apply profile data to the files inside.
+            </p>
+            <p>
+                <b>NOTE:</b> Because the Data/ directory is very large, it is not feasible to load everything every time you load the page. As a result of this issue, this app loads
+                files dynamically, which means it doesnt know about a directory's contents until you've expanded it once.
+            </p>
+            <p>
+                At the top of the right side, you can see how many items you have selected (this does not include folder contents, though it probably should //TODO). Below
+                that, you can set the profile data for the documents you have selected (Client, Matter, Doc Type). If you enable 'Apply settings to folders recursively',
+                all subfolders of the folder(s) you have selected will also be scanned for files when the 'Apply' button is pressed (currently, you must expand any and all
+                subfolders manually if you want them to be included - see above).
+            </p>
+            <p>
+                Once you have made your selections, press 'Apply Settings to Selected Files'. If you have selected at least one file, you should see the number in the section
+                below change, indicating the CSV contents were generated. If you would like to include any other files in this import, repeat the process (do not refresh the page
+                - nothing has been saved yet!)
+            </p>
+            <p>
+                When you have applied the profile data and generated the CSV contents for all of the files for your import, you will want to make sure they are actually saved
+                to a file somewhere. The final section on the right includes an area where you can set the title of this file (it can be whatever you want). Click the 'Save 
+                Import File' button and your file will be generated. Currently, the output files are in the root directory of this tool, but I may make it give a 'Save As'
+                prompt in the future (//TODO).
+            </p>
         </div>
     </div>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>

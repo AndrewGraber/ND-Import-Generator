@@ -32,9 +32,12 @@ const path = __importStar(require("path"));
 const sync_1 = require("csv-parse/sync");
 const sync_2 = require("csv-stringify/sync");
 const moment_1 = __importDefault(require("moment"));
+var ignoredFiles = [
+    "Thumbs.db"
+];
 class DataManager {
     constructor() {
-        this.folderToRead = "A:/Games/";
+        this.folderToRead = "Z:/company/WP51/Data/";
         this.clientData = {};
         this.loadClientData();
     }
@@ -60,6 +63,8 @@ class DataManager {
                     selected: false
                 }
             };
+            if (ignoredFiles.includes(file))
+                continue;
             var fileStats = fs.statSync(curPath);
             if (fileStats.isDirectory()) {
                 fileData.icon = 'jstree-folder';
@@ -73,7 +78,6 @@ class DataManager {
             fileData.modified_date = (0, moment_1.default)(fileStats.mtime).format('YYYY-MM-DD HH:mm');
             output.push(fileData);
         }
-        console.log("DataManager output: " + output);
         return output;
     }
     /*static readFolderContents(dir: string): FileData[] {

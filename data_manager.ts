@@ -35,9 +35,13 @@ type FileData = {
     modified_date?: string;
 }
 
+var ignoredFiles = [
+    "Thumbs.db"
+];
+
 export class DataManager {
     private clientData: ClientMap;
-    private folderToRead: string = "A:/Games/";
+    private folderToRead: string = "Z:/company/WP51/Data/";
 
     constructor() {
         this.clientData = {};
@@ -71,6 +75,8 @@ export class DataManager {
                 }
             };
 
+            if(ignoredFiles.includes(file)) continue;
+
             var fileStats = fs.statSync(curPath);
             if(fileStats.isDirectory()) {
                 fileData.icon = 'jstree-folder';
@@ -86,7 +92,6 @@ export class DataManager {
             output.push(fileData);
         }
 
-        console.log("DataManager output: " + output);
         return output;
     }
 
