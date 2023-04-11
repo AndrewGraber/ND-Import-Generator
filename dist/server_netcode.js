@@ -13,12 +13,14 @@ class ServerNetcode {
     register_handlers() {
         this.io.on('connection', (socket) => {
             this.send_client_data(socket);
-            this.send_folder_data(socket);
-            socket.on("save_new", (data) => {
-                //TODO Saving code
+            socket.on("save_new", (data, filename) => {
+                this.dataManager.saveImportData(data, filename);
+                console.log("Saved your import data to '" + __dirname + filename);
             });
-            socket.on("get_file_node", (filepath) => {
-                this.send_file_node(filepath, socket);
+            socket.on("get_file_node", (filepath, respond) => {
+                var fileData = this.dataManager.getFileNode(filepath);
+                respond({ nodes: fileData });
+                console.log("Sent file node for '" + filepath + "'");
             });
         });
     }
@@ -26,16 +28,6 @@ class ServerNetcode {
         var clientData = this.dataManager.getClientData();
         socket.emit("client_data", clientData);
         console.log("Sent client data!");
-    }
-    send_folder_data(socket) {
-        var folderData = this.dataManager.getFolderData();
-        socket.emit("folder_data", folderData);
-        console.log("Sent folder data!");
-    }
-    send_file_node(filepath, socket) {
-        var fileData = this.dataManager.getFileNode(filepath);
-        socket.emit("file_node", fileData);
-        console.log("Sent file node for '" + filepath + "'");
     }
 }
 exports.ServerNetcode = ServerNetcode;

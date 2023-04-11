@@ -22,14 +22,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataManager = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const sync_1 = require("csv-parse/sync");
+const sync_2 = require("csv-stringify/sync");
+const moment_1 = __importDefault(require("moment"));
 class DataManager {
     constructor() {
-        this.folderToRead = "Z:/company/WP51/Data/_Andrew/";
+        this.folderToRead = "A:/Games/";
         this.clientData = {};
         this.loadClientData();
     }
@@ -37,42 +42,15 @@ class DataManager {
         return this.clientData;
     }
     getFileNode(filePathIn) {
+        if (filePathIn == '#')
+            filePathIn = this.folderToRead;
+        if (!fs.statSync(filePathIn).isDirectory()) {
+            return [];
+        }
         var output = [];
-        fs.readdir(filePathIn, (err, files) => {
-            if (err) {
-                console.error(err);
-                return [];
-            }
-            else {
-                for (var file of files) {
-                    var curPath = path.join(filePathIn, file);
-                    var fileData = {
-                        id: curPath,
-                        text: file,
-                        state: {
-                            opened: false,
-                            disabled: false,
-                            selected: false
-                        }
-                    };
-                    var isDirectory = fs.statSync(curPath).isDirectory();
-                    if (isDirectory) {
-                        fileData.icon = 'jstree-folder';
-                    }
-                    else {
-                        fileData.icon = 'jstree-file';
-                    }
-                    output.push(fileData);
-                }
-                return output;
-            }
-        });
-    }
-    static readFolderContents(dir) {
-        var output = [];
-        var files = fs.readdirSync(dir);
+        var files = fs.readdirSync(filePathIn);
         for (var file of files) {
-            var curPath = path.join(dir, file);
+            var curPath = path.join(filePathIn, file);
             var fileData = {
                 id: curPath,
                 text: file,
@@ -82,23 +60,58 @@ class DataManager {
                     selected: false
                 }
             };
-            var isDirectory = fs.statSync(curPath).isDirectory();
-            if (isDirectory) {
+            var fileStats = fs.statSync(curPath);
+            if (fileStats.isDirectory()) {
                 fileData.icon = 'jstree-folder';
-                fileData.children = DataManager.readFolderContents(curPath);
+                fileData.children = true;
             }
             else {
                 fileData.icon = 'jstree-file';
-                fileData.children = [];
             }
+            fileData.author = "Cynthia P Helfrich";
+            fileData.created_date = (0, moment_1.default)(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
+            fileData.modified_date = (0, moment_1.default)(fileStats.mtime).format('YYYY-MM-DD HH:mm');
             output.push(fileData);
         }
+        console.log("DataManager output: " + output);
         return output;
     }
-    getFolderData() {
+    /*static readFolderContents(dir: string): FileData[] {
+        var output: Array<FileData> = [];
+        var files = fs.readdirSync(dir);
+        for(var file of files) {
+            var curPath = path.join(dir, file);
+            var fileData: FileData = {
+                id: curPath,
+                text: file,
+                state: {
+                    opened: false,
+                    disabled: false,
+                    selected: false
+                }
+            };
+            var fileStats = fs.statSync(curPath);
+            if(fileStats.isDirectory()) {
+                fileData.icon = 'jstree-folder';
+                fileData.children = DataManager.readFolderContents(curPath);
+            } else {
+                fileData.icon = 'jstree-file';
+                fileData.children = [];
+            }
+
+            fileData.author = "Cynthia P Helfrich";
+            fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
+            fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
+
+            output.push(fileData);
+        }
+
+        return output;
+    }*/
+    /*getFolderData() {
         var folderData = DataManager.readFolderContents(this.folderToRead);
         return folderData;
-    }
+    }*/
     loadClientData() {
         console.log("Loading Client Data from 'HLO_Matters_With_Contacts.csv'...");
         const csvFilePath = path.resolve(__dirname, '../HLO_Matters_With_Contacts.csv');
@@ -123,21 +136,22 @@ class DataManager {
         }
         console.log("Client Data Loaded!");
     }
-    saveImportData(data_in) {
+    saveImportData(data_in, filename) {
         var outputHeaders = [
             "filepath",
             "Client",
             "Matter",
-            "Author",
             "Doc Type",
+            "Comments",
             "DOCUMENT NAME",
             "DOCUMENT EXTENSION",
-            "ACCESS",
             "CREATED BY",
             "CREATED DATE",
             "LAST MODIFIED BY",
             "LAST MODIFIED DATE"
         ];
+        var csvData = (0, sync_2.stringify)(data_in, { header: true, columns: outputHeaders });
+        fs.writeFileSync(filename, csvData);
     }
 }
 exports.DataManager = DataManager;

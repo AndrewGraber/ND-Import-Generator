@@ -24,11 +24,6 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '/dist/public/index.html'));
 });
 
-//Config Values
-const config = {
-    OUT_FILE: "./ImportDescription.csv"
-};
-
 /*function saveNewFile(new_data: Array<Array<string>>) {
     var success = true;
     const writableStream = fs.createWriteStream(config.OUT_FILE);

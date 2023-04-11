@@ -8,8 +8,8 @@ interface ServerToClientEvents {
 }
 
 interface ClientToServerEvents {
-    get_file_node: (filepath: any) => void;
-    save_new: (data: Array<Array<any>>) => void;
+    get_file_node: (filepath: any, callback: (fileNodeData: object) => void) => void;
+    save_new: (data: Array<Array<any>>, filename: string) => void;
 }
 
 interface InterServerEvents {
@@ -36,14 +36,16 @@ export class ServerNetcode {
     register_handlers() {
         this.io.on('connection', (socket) => {
             this.send_client_data(socket);
-            this.send_folder_data(socket);
 
-            socket.on("save_new", (data) => {
-                //TODO Saving code
+            socket.on("save_new", (data, filename) => {
+                this.dataManager.saveImportData(data, filename);
+                console.log("Saved your import data to '" + __dirname + filename);
             });
 
-            socket.on("get_file_node", (filepath) => {
-                this.send_file_node(filepath, socket);
+            socket.on("get_file_node", (filepath, respond) => {
+                var fileData = this.dataManager.getFileNode(filepath);
+                respond({ nodes: fileData });
+                console.log("Sent file node for '" + filepath + "'");
             });
         });
     }
@@ -54,15 +56,9 @@ export class ServerNetcode {
         console.log("Sent client data!");
     }
 
-    send_folder_data(socket: any) {
+    /*send_folder_data(socket: any) {
         var folderData = this.dataManager.getFolderData();
         socket.emit("folder_data", folderData);
         console.log("Sent folder data!");
-    }
-
-    send_file_node(filepath: string, socket: any) {
-        var fileData = this.dataManager.getFileNode(filepath);
-        socket.emit("file_node", fileData);
-        console.log("Sent file node for '" + filepath + "'");
-    }
+    }*/
 }

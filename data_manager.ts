@@ -29,7 +29,7 @@ type FileData = {
         disabled: boolean;
         selected: boolean;
     };
-    children?: Array<FileData>;
+    children?: Array<string>|boolean;
     author?: string;
     created_date?: string;
     modified_date?: string;
@@ -37,7 +37,7 @@ type FileData = {
 
 export class DataManager {
     private clientData: ClientMap;
-    private folderToRead: string = "Z:/company/WP51/Data/_Andrew/";
+    private folderToRead: string = "A:/Games/";
 
     constructor() {
         this.clientData = {};
@@ -50,44 +50,47 @@ export class DataManager {
     }
 
     getFileNode(filePathIn: string) {
+        if(filePathIn == '#') filePathIn = this.folderToRead;
+
+        if(!fs.statSync(filePathIn).isDirectory()) {
+            return [];
+        }
+
         var output: Array<FileData> = [];
-        fs.readdir(filePathIn, (err: any, files: any) => {
-            if(err) {
-                console.error(err);
-                return [];
-            } else {
-                for(var file of files) {
-                    var curPath = path.join(filePathIn, file);
-                    var fileData: FileData = {
-                        id: curPath,
-                        text: file,
-                        state: {
-                            opened: false,
-                            disabled: false,
-                            selected: false
-                        }
-                    };
+        var files = fs.readdirSync(filePathIn);
 
-                    var fileStats = fs.statSync(curPath);
-                    if(fileStats.isDirectory()) {
-                        fileData.icon = 'jstree-folder';
-                    } else {
-                        fileData.icon = 'jstree-file';
-                    }
-
-                    fileData.author = "Cynthia P Helfrich";
-                    fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
-                    fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
-
-                    output.push(fileData);
+        for(var file of files) {
+            var curPath = path.join(filePathIn, file);
+            var fileData: FileData = {
+                id: curPath,
+                text: file,
+                state: {
+                    opened: false,
+                    disabled: false,
+                    selected: false
                 }
+            };
 
-                return output;
+            var fileStats = fs.statSync(curPath);
+            if(fileStats.isDirectory()) {
+                fileData.icon = 'jstree-folder';
+                fileData.children = true;
+            } else {
+                fileData.icon = 'jstree-file';
             }
-        });
+
+            fileData.author = "Cynthia P Helfrich";
+            fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
+            fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
+
+            output.push(fileData);
+        }
+
+        console.log("DataManager output: " + output);
+        return output;
     }
 
-    static readFolderContents(dir: string): FileData[] {
+    /*static readFolderContents(dir: string): FileData[] {
         var output: Array<FileData> = [];
         var files = fs.readdirSync(dir);
         for(var file of files) {
@@ -101,8 +104,8 @@ export class DataManager {
                     selected: false
                 }
             };
-            var isDirectory  = fs.statSync(curPath).isDirectory();
-            if(isDirectory) {
+            var fileStats = fs.statSync(curPath);
+            if(fileStats.isDirectory()) {
                 fileData.icon = 'jstree-folder';
                 fileData.children = DataManager.readFolderContents(curPath);
             } else {
@@ -110,16 +113,20 @@ export class DataManager {
                 fileData.children = [];
             }
 
+            fileData.author = "Cynthia P Helfrich";
+            fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
+            fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
+
             output.push(fileData);
         }
 
         return output;
-    }
+    }*/
 
-    getFolderData() {
+    /*getFolderData() {
         var folderData = DataManager.readFolderContents(this.folderToRead);
         return folderData;
-    }
+    }*/
 
     loadClientData() {
         console.log("Loading Client Data from 'HLO_Matters_With_Contacts.csv'...");
@@ -150,13 +157,13 @@ export class DataManager {
         console.log("Client Data Loaded!");
     }
 
-    saveImportData(data_in: Array<Array<any>>) {
+    saveImportData(data_in: Array<Array<any>>, filename: string) {
         var outputHeaders = [
             "filepath",
             "Client",
             "Matter",
-            "Author",
             "Doc Type",
+            "Comments",
             "DOCUMENT NAME",
             "DOCUMENT EXTENSION",
             "CREATED BY",
@@ -164,5 +171,8 @@ export class DataManager {
             "LAST MODIFIED BY",
             "LAST MODIFIED DATE"
         ];
+
+        var csvData = stringify(data_in, { header: true, columns: outputHeaders });
+        fs.writeFileSync(filename, csvData);
     }
 }

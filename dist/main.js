@@ -22,10 +22,6 @@ app.use(express_1.default.static('dist/public'));
 app.get('/', (req, res) => {
     res.sendFile(path_1.default.join(__dirname, '/dist/public/index.html'));
 });
-//Config Values
-const config = {
-    OUT_FILE: "./ImportDescription.csv"
-};
 /*function saveNewFile(new_data: Array<Array<string>>) {
     var success = true;
     const writableStream = fs.createWriteStream(config.OUT_FILE);
