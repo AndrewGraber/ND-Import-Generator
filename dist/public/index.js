@@ -5,6 +5,33 @@ var outputData = {};
 
 var socket;
 
+var docTypeColors = {
+    "": "#d3d3d3",
+    "CORRES": "#64ea74",
+    "DISC": "#5bebc5",
+    "DRAFT": "#5aa0e6",
+    "EXECUTED": "#b678ec",
+    "PLEADING": "#f5a453",
+    "NOTES": "#e4e05d",
+    "SOURCE DOCS": "#ea71b5"
+};
+
+var docStatusColors = {
+    "full": "#0ce313",
+    "partial": "#27ffff",
+    "error": "#fd5a5a"
+};
+
+function buildGradient(docStatus, docType) {
+    var statusColor = docStatusColors(docStatus);
+    var typeColor = docTypeColors(docType);
+    return "linear-gradient(110deg, " + statusColor + " 75%, " + typeColor + " 75%)";
+}
+
+function nodeHasSettings(nodeId) {
+    return outputData.hasOwnProperty(nodeId);
+}
+
 function generateClientIdByMatter() {
     for(var clientId in clientData) {
         for(var matterId in clientData[clientId].matters) {
