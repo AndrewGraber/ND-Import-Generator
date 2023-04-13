@@ -37,15 +37,15 @@ var ignoredFiles = [
 ];
 class DataManager {
     constructor() {
-        this.folderToRead = "Z:/company/WP51/Data/";
         this.clientData = {};
+        this.folderToRead = process.env.ROOT_FOLDER;
         this.loadClientData();
     }
     getClientData() {
         return this.clientData;
     }
     getFileNode(filePathIn) {
-        if (filePathIn == '#')
+        if (filePathIn == '#' && this.folderToRead)
             filePathIn = this.folderToRead;
         if (!fs.statSync(filePathIn).isDirectory()) {
             return [];

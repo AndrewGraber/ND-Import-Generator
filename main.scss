@@ -17,6 +17,25 @@ html, body {
     min-height: 100vh;
 }
 
+p {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    text-indent: 1em;
+}
+
+ol {
+    width: 90%;
+    margin-left: 5%;
+}
+
+ol, ul {
+    padding-left: 1.2em;
+
+    li {
+        margin-bottom: 0.25em;
+    }
+}
+
 div.cont-outer {
     width: 100vw;
     height: 100vh;
@@ -55,14 +74,58 @@ div.content {
     flex-direction: row;
 
     div.left-bar {
-        height: 90vh;
-        overflow-y: scroll;
+        min-height: 90vh;
         flex: 0.4;
-        background-color: $bg-color-filetree;
 
         div#filetree {
             width: 100%;
+            height: 90vh;
+            background-color: $bg-color-filetree;
+            overflow-y: scroll;
             color: $bg-color;
+        }
+
+        div#legend {
+            width: 100%;
+
+            p {
+                margin-top: 0.5em;
+                text-indent: 0;
+            }
+
+            div.split {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+
+                div.half {
+                    width: 50%;
+                    
+                    ul {
+                        width: 100%;
+                        height: 15em;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: stretch;
+                        padding-left: 0;
+
+                        li {
+                            flex: 1 1 0;
+                            color: $bg-color;
+                            margin-bottom: 0;
+                            list-style: none;
+                            text-indent: none;
+                            padding-left: 0.5em;
+                            text-align: center;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -117,23 +180,4 @@ div.separator {
     margin: 1em 0;
     margin-left: 5%;
     border: 1px solid $separator-color;
-}
-
-p {
-    font-size: 1.5em;
-    margin-bottom: 1em;
-    text-indent: 1em;
-}
-
-ol {
-    width: 90%;
-    margin-left: 5%;
-}
-
-ol, ul {
-    padding-left: 1.2em;
-
-    li {
-        margin-bottom: 0.25em;
-    }
 }

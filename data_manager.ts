@@ -3,6 +3,7 @@ import * as path from 'path';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
 import moment from 'moment';
+import dotenv from 'dotenv';
 
 type RawMatterData = {
     MatterNumber: number;
@@ -41,10 +42,11 @@ var ignoredFiles = [
 
 export class DataManager {
     private clientData: ClientMap;
-    private folderToRead: string = "Z:/company/WP51/Data/";
+    private folderToRead: string|undefined;
 
     constructor() {
         this.clientData = {};
+        this.folderToRead = process.env.ROOT_FOLDER;
 
         this.loadClientData();
     }
@@ -54,7 +56,7 @@ export class DataManager {
     }
 
     getFileNode(filePathIn: string) {
-        if(filePathIn == '#') filePathIn = this.folderToRead;
+        if(filePathIn == '#' && this.folderToRead) filePathIn = this.folderToRead;
 
         if(!fs.statSync(filePathIn).isDirectory()) {
             return [];

@@ -22,10 +22,25 @@ var docStatusColors = {
     "error": "#fd5a5a"
 };
 
-function buildGradient(docStatus, docType) {
+function buildGradient(docTypes, docStatus) {
+    var output = "linear-gradient(110deg, ";
     var statusColor = docStatusColors(docStatus);
-    var typeColor = docTypeColors(docType);
-    return "linear-gradient(110deg, " + statusColor + " 75%, " + typeColor + " 75%)";
+    var typeWidth = (0.75 / docTypes.length);
+    
+    for(var i=0; i < docTypes.length; i++) {
+        var typeColor = docTypeColors(docTypes[i]);
+        var startWidth = (i) * typeWidth;
+        var endWidth = (i+1) * typeWidth;
+        if(i == 0) {
+            output += typeColor + " " + endWidth.toFixed(3) + "%, ";
+        } else {
+            output += typeColor + " " + startWidth.toFixed(3) + "%, " + typeColor + " " + endWidth.toFixed(3) + "%, ";
+        }
+    }
+    
+    var statusWidth = docTypes.length * typeWidth;
+    output += statusColor + " " + statusWidth.toFixed(2) + "%)";
+    return output;
 }
 
 function nodeHasSettings(nodeId) {
