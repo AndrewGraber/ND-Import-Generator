@@ -29,5 +29,9 @@ class ServerNetcode {
         socket.emit("client_data", clientData);
         console.log("Sent client data!");
     }
+    send_root_folder_path(socket) {
+        var root_folder_path = this.dataManager.getRootFolderPath();
+        socket.emit("root_folder_path", root_folder_path);
+    }
 }
 exports.ServerNetcode = ServerNetcode;

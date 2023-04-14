@@ -1,46 +1,141 @@
 var clientData = {};
 var clientIdByMatter = {};
 
+var displayData = {};
 var outputData = {};
+var rootFolderPath = "";
 
 var socket;
 
 var docTypeColors = {
-    "": "#d3d3d3",
-    "CORRES": "#64ea74",
-    "DISC": "#5bebc5",
-    "DRAFT": "#5aa0e6",
-    "EXECUTED": "#b678ec",
-    "PLEADING": "#f5a453",
-    "NOTES": "#e4e05d",
-    "SOURCE DOCS": "#ea71b5"
+    "": "#f0f0f0",
+    "CORRES": "#afffc0",
+    "DISC": "#aee6d7",
+    "DRAFT": "#97badd",
+    "EXECUTED": "#cfb4e7",
+    "PLEADING": "#e9c8a8",
+    "NOTES": "#e0dfb2",
+    "SOURCE DOCS": "#e2c1d4"
 };
 
 var docStatusColors = {
-    "full": "#0ce313",
-    "partial": "#27ffff",
-    "error": "#fd5a5a"
+    "empty": "#dfdd6d",
+    "full": "#0ead13",
+    "partial": "#206db4",
+    "error": "#b83939"
 };
 
 function buildGradient(docTypes, docStatus) {
-    var output = "linear-gradient(110deg, ";
-    var statusColor = docStatusColors(docStatus);
-    var typeWidth = (0.75 / docTypes.length);
+    var output = "linear-gradient(90deg, ";
+    var statusColor = docStatusColors[docStatus];
+    var typeWidth = (0.9 / docTypes.length) * 100;
     
     for(var i=0; i < docTypes.length; i++) {
-        var typeColor = docTypeColors(docTypes[i]);
+        var typeColor = docTypeColors[docTypes[i]];
         var startWidth = (i) * typeWidth;
         var endWidth = (i+1) * typeWidth;
         if(i == 0) {
-            output += typeColor + " " + endWidth.toFixed(3) + "%, ";
+            output += typeColor + " " + endWidth.toFixed(2) + "%, ";
         } else {
-            output += typeColor + " " + startWidth.toFixed(3) + "%, " + typeColor + " " + endWidth.toFixed(3) + "%, ";
+            output += typeColor + " " + startWidth.toFixed(2) + "%, " + typeColor + " " + endWidth.toFixed(2) + "%, ";
         }
     }
     
     var statusWidth = docTypes.length * typeWidth;
     output += statusColor + " " + statusWidth.toFixed(2) + "%)";
+    console.log(output);
     return output;
+}
+
+function setDisplayColors(node) {
+    var docTypes = node.original.docType;
+    if(typeof(docTypes) == "string") docTypes = [docTypes];
+
+    displayData[node.id] = buildGradient(docTypes, node.original.docStatus);
+}
+
+function drawDisplayColors() {
+    for(var nodeId in displayData) {
+        if(Object.prototype.hasOwnProperty.call(displayData, nodeId)) {
+            idNoApostrophe = nodeId.replace(/'/g, "\"");
+            $("a[id='" + idNoApostrophe + "_anchor']").css('width', "min(30em, 90%)");
+            $("a[id='" + idNoApostrophe + "_anchor']").css('border-radius', "0 0.75em 0.5em 0");
+            $("a[id='" + idNoApostrophe + "_anchor']").css('background', displayData[nodeId]);
+        }
+    }
+}
+
+var numByStatus = {
+    "empty": 0,
+    "full": 1,
+    "partial": 2,
+    "error": 3
+};
+
+function chooseDominantStatus(status1, status2) {
+    return numByStatus[status1] > numByStatus[status2] ? status1 : status2;
+}
+
+function updateNodeDisplayData(nodeId) {
+    var selDocType = $("#doctype-select").val();
+
+    var tree = $.jstree.reference("#filetree");
+    var node = tree.get_node(nodeId);
+
+    if(node.icon == "jstree-folder") {
+        if(typeof(node.children) == "boolean" || node.children.length == 0) {
+            console.log("Found empty folder: '" + node.id + "'");
+            node.original.docType = [selDocType];
+            node.original.docStatus = node.original.empty ? "empty" : "error";
+            setDisplayColors(node);
+            return;
+        }
+
+        var allChildrenProfiled = true;
+        var childDocTypes = [];
+        var dominantStatus = "full";
+
+        for(var childId of node.children) {
+            var childNode = tree.get_node(childId);
+            if(childNode.original.docType == undefined || childNode.original.docStatus == undefined) {
+                allChildrenProfiled = false;
+                continue;
+            }
+
+            if(childNode.icon == 'jstree-folder') {
+                childDocTypes.push(...childNode.original.docType);
+            } else {
+                childDocTypes.push(childNode.original.docType);
+            }
+
+            dominantStatus = chooseDominantStatus(dominantStatus, childNode.original.docStatus);
+        }
+
+        if(dominantStatus == "full" && !allChildrenProfiled) {
+            dominantStatus = "partial";
+        }
+
+        var docTypesOut = [];
+        for(var type in docTypeColors) {
+            if(Object.prototype.hasOwnProperty.call(docTypeColors, type)) {
+                if(childDocTypes.includes(type)) {
+                    docTypesOut.push(type);
+                }
+            }
+        }
+
+        node.original.docType = docTypesOut;
+        node.original.docStatus = dominantStatus;
+        setDisplayColors(node);
+    } else {
+        node.original.docType = selDocType;
+        node.original.docStatus = "full";
+        setDisplayColors(node);
+    }
+
+    if(node.parent != "#") {
+        updateNodeDisplayData(node.parent);
+    }
 }
 
 function nodeHasSettings(nodeId) {
@@ -115,7 +210,8 @@ function fillMatterOptions(event, data) {
 }
 
 function buildLinesForNode(nodeId, isTopLevel = true) {
-    var node = $.jstree.reference('#filetree').get_node(nodeId);
+    var fileTree = $.jstree.reference('#filetree');
+    var node = fileTree.get_node(nodeId);
     var selClientId = $('#client-select').val();
     var selMatterId = $('#matter-select').val();
     var selDocType = $('#doctype-select').val();
@@ -126,11 +222,14 @@ function buildLinesForNode(nodeId, isTopLevel = true) {
 
     if(isFolder) {
         if(isRecursive || isTopLevel)  {
+
             var output = [];
             for(var childId of node.children) {
                 var childLines = buildLinesForNode(childId, false);
                 output.push(...childLines);
             }
+
+            updateNodeDisplayData(nodeId);
 
             return output;
         } else {
@@ -144,7 +243,7 @@ function buildLinesForNode(nodeId, isTopLevel = true) {
         var dotLocation = shortPath.lastIndexOf('.');
         var documentName = shortPath.slice(0, dotLocation);
         var documentExtension = shortPath.slice(dotLocation + 1);
-        var comments = "OneDrive File Path: " + nodeId;
+        var comments = "Pre-NetDocs File Path: " + nodeId;
 
         var nodeLine = [
             nodeId,
@@ -159,6 +258,8 @@ function buildLinesForNode(nodeId, isTopLevel = true) {
             node.original.author,
             node.original.modified_date
         ];
+
+        updateNodeDisplayData(nodeId);
 
         return [nodeLine];
     }
@@ -186,6 +287,10 @@ $(function() {
         fillClientOptions();
     });
 
+    socket.on('root_folder_path', function(pathIn) {
+        rootFolderPath = pathIn;
+    });
+
     /*socket.on('folder_data', function(data) {
         $('#filetree').jstree({ 'core': {
             'data': data
@@ -204,6 +309,10 @@ $(function() {
         $("#num-selected").html(data.selected.length);
     });
 
+    $('#filetree').on('after_open.jstree', (e, data) => {
+        drawDisplayColors();
+    });
+
     $("#apply-settings").on('click', function(event) {
         var selectedItems = $("#filetree").jstree("get_selected");
 
@@ -217,6 +326,8 @@ $(function() {
                 outputData[line[0]] = line;
             }
         }
+
+        drawDisplayColors();
 
         $("#num-files").html("" + Object.keys(outputData).length);
     });

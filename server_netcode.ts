@@ -3,8 +3,8 @@ import { DataManager } from './data_manager';
 
 interface ServerToClientEvents {
     client_data: (data: object) => void;
-    folder_data: (data: object) => void;
     file_node: (data: object) => void;
+    root_folder_path: (filepath: string) => void;
 }
 
 interface ClientToServerEvents {
@@ -56,9 +56,8 @@ export class ServerNetcode {
         console.log("Sent client data!");
     }
 
-    /*send_folder_data(socket: any) {
-        var folderData = this.dataManager.getFolderData();
-        socket.emit("folder_data", folderData);
-        console.log("Sent folder data!");
-    }*/
+    send_root_folder_path(socket: any) {
+        var root_folder_path = this.dataManager.getRootFolderPath();
+        socket.emit("root_folder_path", root_folder_path);
+    }
 }

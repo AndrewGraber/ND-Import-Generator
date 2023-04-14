@@ -44,6 +44,9 @@ class DataManager {
     getClientData() {
         return this.clientData;
     }
+    getRootFolderPath() {
+        return this.folderToRead;
+    }
     getFileNode(filePathIn) {
         if (filePathIn == '#' && this.folderToRead)
             filePathIn = this.folderToRead;
@@ -55,7 +58,7 @@ class DataManager {
         for (var file of files) {
             var curPath = path.join(filePathIn, file);
             var fileData = {
-                id: curPath,
+                id: curPath.replace(/\\/g, "/"),
                 text: file,
                 state: {
                     opened: false,
@@ -68,7 +71,9 @@ class DataManager {
             var fileStats = fs.statSync(curPath);
             if (fileStats.isDirectory()) {
                 fileData.icon = 'jstree-folder';
-                fileData.children = true;
+                var childFiles = fs.readdirSync(curPath);
+                fileData.children = childFiles.length > 0;
+                fileData.empty = childFiles.length == 0;
             }
             else {
                 fileData.icon = 'jstree-file';
@@ -80,42 +85,6 @@ class DataManager {
         }
         return output;
     }
-    /*static readFolderContents(dir: string): FileData[] {
-        var output: Array<FileData> = [];
-        var files = fs.readdirSync(dir);
-        for(var file of files) {
-            var curPath = path.join(dir, file);
-            var fileData: FileData = {
-                id: curPath,
-                text: file,
-                state: {
-                    opened: false,
-                    disabled: false,
-                    selected: false
-                }
-            };
-            var fileStats = fs.statSync(curPath);
-            if(fileStats.isDirectory()) {
-                fileData.icon = 'jstree-folder';
-                fileData.children = DataManager.readFolderContents(curPath);
-            } else {
-                fileData.icon = 'jstree-file';
-                fileData.children = [];
-            }
-
-            fileData.author = "Cynthia P Helfrich";
-            fileData.created_date = moment(fileStats.birthtime).format('YYYY-MM-DD HH:mm');
-            fileData.modified_date = moment(fileStats.mtime).format('YYYY-MM-DD HH:mm');
-
-            output.push(fileData);
-        }
-
-        return output;
-    }*/
-    /*getFolderData() {
-        var folderData = DataManager.readFolderContents(this.folderToRead);
-        return folderData;
-    }*/
     loadClientData() {
         console.log("Loading Client Data from 'HLO_Matters_With_Contacts.csv'...");
         const csvFilePath = path.resolve(__dirname, '../HLO_Matters_With_Contacts.csv');
