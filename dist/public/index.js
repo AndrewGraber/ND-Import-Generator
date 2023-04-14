@@ -274,6 +274,18 @@ async function getFileNodeChildren(currentNode, callback) {
 }
 
 $(function() {
+    $collapsibles = $(".collapsible");
+    $collapsibles.on('click', function(event) {
+        var $content = $(this.nextElementSibling);
+
+        $(this).toggleClass("collapsible-active");
+        if($(this).hasClass("collapsible-active")) {
+            $content.css('max-height', $content[0].scrollHeight + "px");
+        } else {
+            $content.css('max-height', "0");
+        }
+    });
+
     socket = io();
 
     $("#doctype-select").select2();

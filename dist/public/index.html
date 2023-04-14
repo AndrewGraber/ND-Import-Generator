@@ -24,10 +24,10 @@
             <div class="left-bar">
                 <div id="filetree"></div>
                 <div id="legend">
-                    <p>Colors Legend: </p>
+                    <p style="margin-bottom: 0.25em; font-weight: bold;">Colors Legend: </p>
                     <div class="split">
                         <div class="half">
-                            <p>Document Type(s)</p>
+                            <p style="margin-top: 0; margin-bottom: 0.25em; font-size: 1em; font-weight: bold;">Document Type(s)</p>
                             <ul>
                                 <li style="background-color: #f0f0f0;">No Doc Type</li>
                                 <li style="background-color: #afffc0;">Correspondence</li>
@@ -40,7 +40,7 @@
                             </ul>
                         </div>
                         <div class="half">
-                            <p>Profile Status</p>
+                            <p style="margin-top: 0; margin-bottom: 0.25em; font-size: 1em; font-weight: bold;">Profile Status</p>
                             <ul>
                                 <li style="background-color: #dfdd6d;">Folder was Selected but is Empty</li>
                                 <li style="background-color: #0ead13;">Document/Folder Fully Included in Import</li>
@@ -49,16 +49,35 @@
                             </ul>
                         </div>
                     </div>
-                    <p>
-                        Items will not include these colors until they have been profiled. The main section of the bar shows doc type(s), and the right edge
-                        shows the status. Folders that include profiled documents of multiple types will show multiple colors to represent all their contents.
-                        An example is given below of what you would see if a folder included documents with the 'Correspondence' and 'Discovery' doc types. The
-                        green on the right edge means all the documents in the folder have been profiled.
-                    </p>
+                </div>
+                <button type="button" class="collapsible">File Tree Color Tips</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>Items will not include these colors until they have been profiled.</li>
+                        <li>The main section of the bar shows doc type(s), and the right edge shows the status according to the colors in the table above.</li>
+                        <li>Folders that include profiled documents of multiple types will show multiple colors to represent all their contents.</li>
+                        <li>
+                            The Mass Import Utility cannot handle putting an entire folder as a single entry, so if you select a folder, you are effectively
+                            selecting any documents inside the folder (and any nested folders if you check 'Apply settings to folders recursively'). If a
+                            folder has documents or subfolders that haven't been profiled, its status will be blue to indicate that you're not importing the
+                            entire folder.
+                        </li>
+                        <li>
+                            If a folder's status is red, it most likely means that either it or one of its subfolders was supposed to be profiled, but the
+                            folder's information was missing. This is because the folder data is loaded dynamically to avoid long load times; you will need
+                            to open each folder you wish to import and all of its subfolders before hitting 'Apply' so that the data will exist when it's needed.
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="right-bar">
-                <div class="section">
+                <div class="section" style="margin-bottom: 0;">
+                    <h2>
+                        Profile Assignment for Selected Items
+                    </h2>
+                </div>
+                <div class="separator"></div>
+                <div class="section" style="margin-bottom: 0.5em;">
                     <p><span id="num-selected">0</span> items selected.</p>
                 </div>
                 <div class="separator"></div>
@@ -75,7 +94,18 @@
                 <div class="section">
                     <p>
                         <span class='input-label'>Doc Type: </span><select id="doctype-select">
-                            <option value="">No Doc Type</option>
+                            <option value="CORRES">Correspondence</option>
+                            <option value="DISC">Discovery</option>
+                            <option value="DRAFT">Drafted Documents</option>
+                            <option value="EXECUTED">Executed Documents</option>
+                            <option value="PLEADING">Pleadings</option>
+                            <option value="NOTES">Retainer and Notes</option>
+                            <option value="SOURCE DOCS">Source Documents</option>
+                            <optgroup label="Options You Probably Don't Want">
+                                <option value="">No Doc Type</option>
+                                <option value="Email">Email</option>
+                            </optgroup>
+                            <!--<option value="">No Doc Type</option>
                             <option value="Email">Emails</option>
                             <optgroup label="Court-Related Matters">
                                 <option value="CORRES">Correspondence</option>
@@ -89,7 +119,7 @@
                                 <option value="DRAFT">Drafted Documents</option>
                                 <option value="EXECUTED">Executed Documents</option>
                                 <option value="SOURCE DOCS">Source Documents</option>
-                            </optgroup>
+                            </optgroup>-->
                         </select>
                     </p>
                 </div>

@@ -50,7 +50,8 @@ div.info {
 div.content {
   background-color: #413e4e;
   display: flex;
-  flex-direction: row; }
+  flex-direction: row;
+  align-items: flex-start; }
   div.content div.left-bar {
     min-height: 90vh;
     flex: 0.4; }
@@ -61,7 +62,8 @@ div.content {
       overflow-y: scroll;
       color: #2b2b2b; }
     div.content div.left-bar div#legend {
-      width: 100%; }
+      width: 100%;
+      margin-bottom: 0.5em; }
       div.content div.left-bar div#legend p {
         margin-top: 0.5em;
         text-indent: 0; }
@@ -98,6 +100,9 @@ div.content {
       width: 90%;
       margin-left: 5%;
       margin-bottom: 2em; }
+      div.content div.right-bar div.section h2 {
+        font-size: 1.75em;
+        font-weight: 300; }
       div.content div.right-bar div.section p {
         text-indent: unset;
         margin-bottom: 0.5em; }
@@ -126,3 +131,36 @@ div.separator {
   margin: 1em 0;
   margin-left: 5%;
   border: 1px solid #afafaf; }
+
+.collapsible {
+  background-color: #322f3f;
+  cursor: pointer;
+  padding: 0.5em;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  color: #d4d4d4;
+  font-size: 1.25em;
+  font-weight: bold; }
+  .collapsible:after {
+    content: '\2795';
+    font-size: 0.9em;
+    color: #d4d4d4;
+    float: right; }
+
+.collapsible-active, .collapsible:hover {
+  background-color: #250f83; }
+
+.collapsible-active:after {
+  content: '\2796'; }
+
+.collapsible-content {
+  padding: 0 0.5em;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #c2bed4;
+  color: #2b2b2b;
+  transition: max-height 0.2s ease-out; }
+  .collapsible-content ul {
+    margin: 0.5em 0; }

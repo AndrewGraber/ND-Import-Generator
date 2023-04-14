@@ -72,6 +72,7 @@ div.content {
     background-color: $bg-color-content;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 
     div.left-bar {
         min-height: 90vh;
@@ -87,6 +88,7 @@ div.content {
 
         div#legend {
             width: 100%;
+            margin-bottom: 0.5em;
 
             p {
                 margin-top: 0.5em;
@@ -137,6 +139,11 @@ div.content {
             width: 90%;
             margin-left: 5%;
             margin-bottom: 2em;
+
+            h2 {
+                font-size: 1.75em;
+                font-weight: 300;
+            }
     
             p {
                 text-indent: unset;
@@ -180,4 +187,45 @@ div.separator {
     margin: 1em 0;
     margin-left: 5%;
     border: 1px solid $separator-color;
+}
+
+.collapsible {
+    background-color: $bg-color-title;
+    cursor: pointer;
+    padding: 0.5em;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    color: $font-color;
+    font-size: 1.25em;
+    font-weight: bold;
+
+    &:after {
+        content: '\2795';
+        font-size: 0.9em;
+        color: $font-color;
+        float: right;
+    }
+}
+
+.collapsible-active, .collapsible:hover {
+    background-color: $bright-color;
+}
+
+.collapsible-active:after {
+    content: '\2796';
+}
+
+.collapsible-content {
+    padding: 0 0.5em;
+    max-height: 0;
+    overflow: hidden;
+    background-color: $bg-color-filetree;
+    color: $bg-color;
+    transition: max-height 0.2s ease-out;
+
+    ul {
+        margin: 0.5em 0;
+    }
 }
