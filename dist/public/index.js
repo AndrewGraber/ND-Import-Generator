@@ -57,10 +57,11 @@ function setDisplayColors(node) {
 function drawDisplayColors() {
     for(var nodeId in displayData) {
         if(Object.prototype.hasOwnProperty.call(displayData, nodeId)) {
-            idNoApostrophe = nodeId.replace(/'/g, "\"");
-            $("a[id='" + idNoApostrophe + "_anchor']").css('width', "min(30em, 90%)");
-            $("a[id='" + idNoApostrophe + "_anchor']").css('border-radius', "0 0.75em 0.5em 0");
-            $("a[id='" + idNoApostrophe + "_anchor']").css('background', displayData[nodeId]);
+            //idNoApostrophe = nodeId.replace(/'/g, "\"");
+            //console.log(idNoApostrophe);
+            $('a[id="' + nodeId + '_anchor"]').css('width', "min(30em, 90%)");
+            $('a[id="' + nodeId + '_anchor"]').css('border-radius', "0 0.75em 0.5em 0");
+            $('a[id="' + nodeId + '_anchor"]').css('background', displayData[nodeId]);
         }
     }
 }
